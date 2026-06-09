@@ -9,6 +9,7 @@ import {
   getMonthlyTrend,
   getCategoryColor,
 } from "@/lib/utils";
+import { CATEGORIES } from "@/types/expense";
 import {
   BarChart,
   Bar,
@@ -16,6 +17,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
   ResponsiveContainer,
   PieChart,
   Pie,
@@ -76,7 +78,15 @@ export default function Dashboard({ expenses }: DashboardProps) {
                     formatter={(value) => formatCurrency(Number(value))}
                     contentStyle={{ borderRadius: "8px", border: "1px solid #e2e8f0" }}
                   />
-                  <Bar dataKey="amount" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  {CATEGORIES.map((category) => (
+                    <Bar
+                      key={category}
+                      dataKey={category}
+                      stackId="a"
+                      fill={getCategoryColor(category)}
+                    />
+                  ))}
                 </BarChart>
               </ResponsiveContainer>
             ) : (

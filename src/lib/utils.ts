@@ -73,18 +73,19 @@ export function getSpendingByCategory(
 
 export function getMonthlyTrend(
   expenses: Expense[]
-): { month: string; amount: number }[] {
-  const map: Record<string, number> = {};
+): Record<string, string | number>[] {
+  const map: Record<string, Record<string, number>> = {};
   expenses.forEach((e) => {
     const month = format(parseISO(e.date), "yyyy-MM");
-    map[month] = (map[month] || 0) + e.amount;
+    if (!map[month]) map[month] = {};
+    map[month][e.category] = (map[month][e.category] || 0) + e.amount;
   });
   return Object.entries(map)
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(-6)
-    .map(([month, amount]) => ({
+    .map(([month, categories]) => ({
       month: format(parseISO(month + "-01"), "MMM yyyy"),
-      amount,
+      ...categories,
     }));
 }
 
